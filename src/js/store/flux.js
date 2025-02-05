@@ -1,42 +1,58 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			contactos: []
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			getContacts: async () => {
+				const response = await fetch("https://playground.4geeks.com/contact/agendas/DavidMoya/contacts")
+				if (!response.ok) {
+					await getActions().createAgenda()
+				}
+				const data = await response.json();
+				const store = getStore()
+				setStore({ ...store, ['contactos']: data.contacts })
+				console.log(store);
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+			},
 
-				//reset the global store
-				setStore({ demo: demo });
+			createAgenda: async () => {
+				const response = await fetch("https://playground.4geeks.com/contact/agendas/DavidMoya",
+					{ method: "POST" })
+				const data = await response.json()
+			},
+
+			addContact: async (datosContacto) => {
+				const response = await fetch("https://playground.4geeks.com/contact/agendas/DavidMoya/contacts",
+					{
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						},
+						body: JSON.stringify(datosContacto)
+					})
+				const data = await response.json();
+				getActions().getContacts();
+			},
+
+			deleteContact: async (id) => {
+				const response = await fetch(`https://playground.4geeks.com/contact/agendas/DavidMoya/contacts/${id}`,
+					{ method: "DELETE" }
+				);
+				if (response.ok) {
+					getActions().getContacts()
+				}
+			},
+			upgrateContact: async(id) => {
+				const response = await fetch (`https://playground.4geeks.com/contact/agendas/DavidMoya/contacts/${id}`,
+					{method:"PUT",
+					 headers :{
+						"Content-type" : "application/json"
+					 },
+					 body: JSON.stringify()	
+					})
+				const data = await response.json();
+				getActions().getContacts();
 			}
 		}
 	};
