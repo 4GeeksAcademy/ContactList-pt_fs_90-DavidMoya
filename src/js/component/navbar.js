@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 export const Navbar = () => {
-	const {store, actions} =useContext(Context)
+	const { store, actions } = useContext(Context)
+	let numeroContactos = store.contactos.length
 	return (
-		<nav className="navbar navbar-light bg-light mb-4">
-			<Link to="/">
-				<span className="navbar-brand mb-0 ms-3 h1">MI AGENDA TELEFÓNICA</span>
-			</Link>
+		<nav className="navbar navbar-light bg-black mb-4 p-3 d-flex sticky-top">
+			<span className="navbar-brand mb-0 ms-5 h1 text-white">MI AGENDA TELEFÓNICA</span>
+			<h5 className="me-5 text-white">Nº de contactos {numeroContactos}</h5>
 		</nav>
 	);
 };

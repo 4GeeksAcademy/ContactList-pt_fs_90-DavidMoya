@@ -1,0 +1,30 @@
+.col{
+    justify-content: center;
+}
+.agregar{
+    margin-bottom: 2rem;
+}
+.contacto{
+    justify-content: space-between;
+    min-height: 200px;
+    width: 700px;
+    margin-bottom: 1rem;
+    border: 2px solid rgb(27, 25, 25);
+    border-radius: 5px; 
+}
+.imagen{
+    width: 180px;
+    height: 180px;
+    align-self: center;
+    margin: 15px;
+
+}
+.body{
+    width: 300px;
+    align-self: center;
+    text-align:left;
+}
+.buttons{
+    align-self: center;
+    margin-right: 2rem;
+}

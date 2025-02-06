@@ -4,7 +4,6 @@ import ScrollToTop from "./component/scrollToTop";
 
 import { Home, ListaContactos } from "./views/listaContactos";
 import { AMContactos, Demo } from "./views/aMContactos";
-import { Single } from "./views/single";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
@@ -23,8 +22,8 @@ const Layout = () => {
 					<Navbar />
 					<Routes>
 						<Route path="/" element={<ListaContactos />} />
-						<Route path="/demo" element={<AMContactos />} />
-						<Route path="/single/:theid" element={<Single />} />
+						<Route path="/nuevoContacto" element={<AMContactos />} />
+						<Route path="/editar/:id" element={<AMContactos />} />
 						<Route path="*" element={<h1>Not found!</h1>} />
 					</Routes>
 					<Footer />

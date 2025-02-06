@@ -1,53 +1,77 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
-import "../../styles/demo.css";
+import "../../styles/aMContactos.css";
+
+
 
 export const AMContactos = () => {
 	const { store, actions } = useContext(Context);
+	const { id } = useParams();
+	const navigate = useNavigate();
+	let palabraMayus = "";
 
-	const [name, setName] = useState("")
-	console.log(name);
-	const [direccion, setDireccion] = useState("")
-	console.log(direccion);
-	const [telefono, setTelefono] = useState("")
-	console.log(telefono);
-	const [email, setEmail] = useState("")
-	console.log(email);
+	const primeraMayuscula = (palabra) => {
+		palabraMayus = palabra.charAt(0).toUpperCase() + palabra.slice(1);
+	  };
 
-	const datosContacto =
-	{
-		name: name,
-		address: direccion,
-		phone: telefono,
-		email: email
-	}
+	const [contacto, setContacto] = useState({
+		name: "",
+		address: "",
+		phone: "",
+		email: ""
+	});
 
+	useEffect(() => {
+		if (id) {
+			const contactoExistente = store.contactos.find(contact => contact.id == id);
+			if (contactoExistente) {
+				setContacto(contactoExistente);
+			}
+		}
+	}, [id, store.contactos]);
+
+	const handleChange = (e) => {
+		let value = e.target.value;
+		if(e.target.name !== "email"){
+			primeraMayuscula(value)	
+		}else {
+			palabraMayus=value
+		}
+		setContacto({ ...contacto, [e.target.name]: palabraMayus });
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (id) {
+			actions.updateContact(id, contacto, navigate);
+		} else {
+			actions.addContact(contacto, navigate);
+		} 
+	};
 
 	return (
 		<div className="container-fluid">
 			<Link to="/">
 				<button className="btn btn-primary ms-5 mb-5">Volver a contactos</button>
 			</Link>
-			<div className="form">
+			<form className="form" onSubmit={handleSubmit}>
 				<div className="input-name mb-4 ms-5">
 					<div>
-						<label><b>Name</b></label>
+						<label><b>Nombre</b></label>
 					</div>
 					<div>
-						<input type="text" className="nombre" placeholder="Añada nombre de contacto"
-							onChange={(e) => { setName(e.target.value) }}>
-						</input>
+						<input type="text" name="name" placeholder="Añada nombre de contacto"
+							value={contacto.name} onChange={handleChange} />
 					</div>
 				</div>
 				<div className="input-name mb-4 ms-5">
 					<div>
-						<label><b>Direccion</b></label>
+						<label><b>Dirección</b></label>
 					</div>
 					<div>
-						<input type="text" className="direccion" placeholder="Añada una dirección"
-							onChange={(e) => { setDireccion(e.target.value) }}>
-						</input>
+						<input type="text" name="address" placeholder="Añada una dirección"
+							value={contacto.address} onChange={handleChange} />
 					</div>
 				</div>
 				<div className="input-name mb-4 ms-5">
@@ -55,26 +79,23 @@ export const AMContactos = () => {
 						<label><b>Teléfono</b></label>
 					</div>
 					<div>
-						<input type="text" className="telefono" placeholder="Añada un teléfono"
-							onChange={(e) => { setTelefono(e.target.value) }}>
-						</input>
+						<input type="text" name="phone" placeholder="Añada un teléfono"
+							value={contacto.phone} onChange={handleChange} />
 					</div>
 				</div>
-				<div className="input-name  required mb-4 ms-5">
+				<div className="input-name mb-4 ms-5">
 					<div>
 						<label><b>Email</b></label>
 					</div>
 					<div>
-						<input type="text" className="email" placeholder="Añada un email"
-							onChange={(e) => { setEmail(e.target.value) }}>
-						</input>
+						<input type="email" name="email" placeholder="Añada un email"
+							value={contacto.email} onChange={handleChange} />
 					</div>
 				</div>
-				<button className="btn btn-primary ms-5 d-flex"
-					onClick={() => { actions.addContact(datosContacto) }}>
-					Guardar contacto
+				<button type="submit" className="btn btn-primary ms-5 d-flex">
+					{id ? "Actualizar Contacto" : "Guardar Contacto"}
 				</button>
-			</div>
+			</form>
 		</div>
 	);
 };
